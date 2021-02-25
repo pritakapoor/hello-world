@@ -1,3 +1,7 @@
+#Prita Kapoor
+#8010339
+#6.22
+
 char1 = int(input())
 char2 = int(input())
 char3 = int(input())
