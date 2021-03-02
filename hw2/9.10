@@ -1,0 +1,18 @@
+#Prita Kapoor
+#8010339
+#9.10
+
+import csv
+
+name = input()
+with open(name, 'r') as file:
+    analyzer = csv.reader(file, delimiter=',')
+    words = dict()
+    for a in analyzer:
+        for b in a:
+            if b in words:
+                words[b] = words[b] + 1
+            else:
+                words[b] = 1
+    for c in list(words.keys()):
+        print("{} {}".format(c, words[c]))
