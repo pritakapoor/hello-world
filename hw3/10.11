@@ -1,0 +1,36 @@
+#Prita Kapoor
+#8010339
+#10.11
+
+class FoodItem:
+
+    def __init__(self, name="None", fat=0.0, carbs=0.0, protein=0.0):
+        self.name = name
+        self.fat = fat
+        self.carbs = carbs
+        self.protein = protein
+
+    def get_calories(self, num_servings):
+        calor = ((self.fat * 9) + (self.carbs * 4) + (self.protein * 4)) * num_servings;
+        return calor
+
+    def print_info(self):
+        print('Nutritional information per serving of {}:'.format(self.name))
+        print('Fat: {:.2f} g'.format(self.fat))
+        print('Carbohydrates: {:.2f} g'.format(self.carbs))
+        print('Protein: {:.2f} g'.format(self.protein))
+
+
+if __name__ == "__main__":
+    food_item_a = FoodItem()
+    item = input()
+    afat = float(input())
+    acarbs = float(input())
+    aprotein = float(input())
+    food_item_b = FoodItem(item_name, afat, amcarbs, aprotein)
+    num_servings = float(input())
+    food_item_a.print_info()
+    print('Number of calories for {:.2f} serving(s): {:.2f}'.format(num_servings, food_item_a.get_calories(num_servings)))
+    print()
+    food_item_b.print_info()
+    print('Number of calories for {:.2f} serving(s): {:.2f}'.format(num_servings, food_item_b.get_calories(num_servings)))
