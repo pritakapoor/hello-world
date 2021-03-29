@@ -1,6 +1,6 @@
 #Prita Kapoor
 #8010339
-#10.18
+#10.19
 
 class ItemToPurchase:
     def __init__(attributes, name='none', price=0, quantity=0, description='none'):
