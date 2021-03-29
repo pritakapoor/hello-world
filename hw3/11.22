@@ -1,0 +1,11 @@
+#Prita Kapoor
+#8010339
+#11.22
+
+words = input().split()
+for word in words:
+    frequencies = 0
+    for w in words:
+        if w == word:
+            frequencies += 1
+    print(word, frequencies)
