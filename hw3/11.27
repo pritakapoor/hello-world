@@ -1,0 +1,54 @@
+#Prita Kapoor
+#8010339
+#11.27
+
+soccer_dict={}
+i=1
+count=1
+for i in range(1,9):
+    j_num = int(input('Enter player {}\'s jersey number:\n' .format(i)))
+    rate = int(input('Enter player {}\'s rating:\n' .format(i)))
+    print()
+
+    if j_num < 0 and j_num > 99 and rate < 0 and rate > 9:
+        print('invalid entry')
+        break
+    else:
+        soccer_dict[j_num] = rate
+
+print("ROSTER")
+
+for j_num,rate in sorted(soccer_dict.items()):
+    print("Jersey number: %d, Rating: %d" % (j_num,rate))
+
+option=''
+
+while option.upper()!='Q':
+
+    print('\nMENU\na - Add player\nd - Remove player\nu - Update player rating\n''r - Output players above a rating\no - Output roster\nq - Quit\n')
+
+    option = input('Choose an option:\n')
+
+    if option == 'a':
+        j_num = int(input('Enter a new player\'s jersey number:\n' .format(i)))
+        rate = int(input('Enter the players\'s rating:\n'.format(i)))
+        soccer_dict[j_num] = rate
+    elif option == 'd':
+        j_num = int(input('Enter a jersey number:\n'))
+        if j_num in soccer_dict.keys():
+            del soccer_dict[j_num]
+    elif option == 'u':
+        j_num = int(input('Enter a jersey number:\n'))
+        if j_num in soccer_dict.keys():
+            rate = int(input('Enter a new rating for player:\n'))
+            soccer_dict[j_num] = rate
+    elif option == 'r':
+        rating_input=int(input('Enter a rating:\n'))
+        print('ABOVE {}'.format(rating_input))
+        for j_num,rate in sorted(soccer_dict.items()):
+            if rate > rating_input:
+                print("Jersey number: %d, Rating: %d" % (j_num,rate))
+    elif option == 'o':
+        print("ROSTER")
+        for j_num,rate in sorted(soccer_dict.items()):
+            print("Jersey number: %d, Rating: %d" % (j_num,rate))
