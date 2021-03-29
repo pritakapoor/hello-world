@@ -1,0 +1,15 @@
+#Prita Kapoor
+#8010339
+#11.18
+
+integers = input().split()
+result = []
+
+for n in integers:
+    n = int(n)
+    if n >= 0:
+        result.append(n)
+
+result.sort()
+for n in result:
+    print(n, end=' ')
