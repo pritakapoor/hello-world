@@ -1,0 +1,186 @@
+import datetime
+import csv
+
+class DirectoryList:
+
+    def __init__(self, item_list):
+        self.item_list = item_list
+    def full_inventory(self):
+
+        with open('./CIS2348_FinalProject/FullInventory.csv', 'w') as file:
+            items = self.item_list
+            keys = sorted(items.keys(), key=lambda x: items[x]['manufacturer'])
+            for item in keys:
+                ID = item
+                manfacturer_name = items[item]['manufacturer']
+                item_type = items[item]['item type']
+                prices = items[item]['prices']
+                service_date = items[item]['service date']
+                damaged_goods= items[item]['damaged goods']
+                file.write('{},{},{},{},{},{}\n'.format(ID,manufacturer_name,item_type,prices,service_date,damaged_goods))
+
+    def type_inventory(self):
+        items = self.item_list
+        types = []
+        keys = sorted(items.keys())
+        for item in items:
+            item_type = items[item]['item type']
+            if item_type not in types:
+                types.append(item_type)
+        for type in types:
+            file_name = type.capitalize() + 'Inventory.csv'
+            with open('./CIS2348_FinalProject/'+file_name, 'w') as file:
+                for item in keys:
+                    ID = item
+                    manufacturer_name = items[item]['manufacturer']
+                    prices = items[item]['prices']
+                    service_date = items[item]['service date']
+                    damaged_goods = items[item]['damaged goods']
+                    item_type = items[item]['item type']
+                    if type == item_type:
+                        file.write('{},{},{},{},{}\n'.format(ID, manufacturer_name, prices, service_date, damaged_goods))
+
+    def past_service_date_inventory(self):
+        items = self.item_list
+        keys = sorted(items.keys(), key=lambda x: datetime.strptime(items[x]['service date'], "%m/%d/%Y").date(), reverse=True)
+        with open('./CIS2348_FinalProject/PastServiceDateInventory.csv', 'w') as file:
+            for item in keys:
+                ID = item
+                manufacturer_name = items[item]['manufacturer']
+                item_type = items[item]['item type']
+                prices = items[item]['prices']
+                service_date = items[item]['service date']
+                damaged_goods = items[item]['damaged goods']
+                current = datetime.now().date()
+                bad_food = datetime.strptime(service_date, "%m/%d/%Y").date()
+                expired = bad_food < current
+                if expired:
+                    file.write('{},{},{},{},{},{}\n'.format(ID, manufacturer_name, item_type, prices, service_date, damaged_goods))
+
+
+    def damaged_inventory(self):
+        items = self.item_list
+        keys = sorted(items.keys(), key=lambda x: items[x]['prices'], reverse=True)
+        with open('./CIS2348_FinalProject/DamagedInventory.csv', 'w') as file:
+            for item in keys:
+                ID = item
+                manufacturer_name = items[item]['manufacturer']
+                item_type = items[item]['item type']
+                prices = items[item]['prices']
+                service_date = items[item]['service date']
+                damaged_goods = items[item]['damaged goods']
+                if damaged_goods:
+                    file.write('{},{},{},{},{}\n'.format(ID, manufacturer_name, item_type, prices, service_date))
+
+    inventory = DirectoryList(items)
+    inventory.damaged_inventory()
+    inventory.past_service_date_inventory()
+    inventory.type_inventory()
+    inventory.full_inventory()
+
+if __name__ == '__main__':
+    items = {}
+    files = ['ManufacturerList.csv', 'PriceList.csv', 'ServiceDatesList.csv']
+    for file in files:
+        with open(file, 'r') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for line in csv_reader:
+                item_ID = line[0]
+                if file == files[0]:
+                    items[item_ID] = {}
+                    manufacturer_name = line[1]
+                    item_type = line[2]
+                    damaged_goods = line[3]
+                    items[item_ID]['manufacturer'] = manufacturer_name.strip()
+                    items[item_ID]['item type'] = item_type.strip()
+                    items[item_ID]['damaged goods'] = damaged_goods
+                elif file == files[1]:
+                    prices = line[1]
+                    items[item_ID]['prices'] = prices
+                elif file == files[2]:
+                    service_date = line[1]
+                    items[item_ID]['service date'] = service_date
+
+    types = []
+    manufacturers = []
+    for item in items:
+        vertified_manufacturer = items[item]['manufacturer']
+        vertified_type = items[item]['item type']
+        if vertified_manufacturer not in types:
+            manufacturers.append(vertified_manufacturer)
+        if vertified_type not in types:
+            types.append(vertified_type)
+
+    user_input = None
+    while user_input != 'q':
+        user_input = input("\n Input the item manufacturer and item type (ex: Apple laptop) or input 'q' to quit:\n")
+        if user_input == 'q':
+            break
+        else:
+            chosen_manufacturer = None
+            chosen_type = None
+            user_input = user_input.split()
+            wrong_key = False
+            for word in user_input:
+                if word in manufacturers:
+                    if chosen_manufacturer:
+                        wrong_key = True
+                    else:
+                        chosen_manufacturer = word
+                elif word in types:
+                    if chosen_type:
+                        wrong_key = True
+                    else:
+                        chosen_type = word
+            if not chosen_manufacturer or not chosen_type or wrong_key:
+                print('Not in inventory')
+            else:
+                keys = sorted(items.keys(), key=lambda x: items[x]['prices'], reverse=True)
+                twin_items = []
+
+                related_items = {}
+                for item in keys:
+                    if items[item]['item type'] == chosen_type:
+                        current = datetime.now().date()
+                        service_date = items[item]['service date']
+                        bad_food = datetime.strptime(service_date, "%m/%d/%Y").date()
+                        expired = bad_food < current
+                        if items[item]['manufacturer'] == chosen_manufacturer:
+                            if not expired and not items[item]['damaged goods']:
+                                twin_items.append((item, items[item]))
+                        else:
+                            if not expired and not items[item]['damaged goods']:
+                                related_items[item] = items[item]
+
+                if twin_items:
+                    item = twin_items[0]
+                    item_ID = item[0]
+                    manufacturer_name = item[1]['manufacturer']
+                    item_type = item[1]['item type']
+                    prices = item[1]['prices']
+                    print("Your item is: {}, {}, {}, {}\n".format(item_ID, manufacturer_name, item_type, prices))
+
+                    if related_items:
+                        matched_prices = prices
+                        similar_item = None
+                        similar_prices_vary = None
+                        for item in related_items:
+                            if similar_prices_vary == None:
+                                similar_item = related_items[item]
+                                similar_prices_vary = abs(int(matched_prices) - int(related_items[item]['prices']))
+                                item_ID = item
+                                manufacturer_name = related_items[item]['manufacturer']
+                                item_type = related_items[item]['item type']
+                                prices = related_items[item]['prices']
+                                continue
+                            prices_vary = abs(int(matched_prices) - int(related_items[item]['prices']))
+                            if prices_vary < similar_prices_vary:
+                                similar_item = item
+                                similar_prices_vary = prices_vary
+                                item_ID = item
+                                manufacturer_name = related_items[item]['manufacturer']
+                                item_type = related_items[item]['item type']
+                                prices = related_items[item]['prices']
+                        print('Consider this: {}, {}, {}, {}\n'.format(item_ID, manufacturer_name, item_type, prices))
+                else:
+                    print('Not in inventory')
