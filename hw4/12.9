@@ -4,7 +4,8 @@
 
 list = input().split()
 name = list[0]
-if name != '-1':
+
+while name != '-1':
     try:
         age = int(list[1]) + 1
     except ValueError:
