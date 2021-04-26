@@ -1,0 +1,15 @@
+#Prita Kapoor
+#8010339
+#12.9
+
+list = input().split()
+name = list[0]
+if name != '-1':
+    try:
+        age = int(list[1]) + 1
+    except ValueError:
+        age = 0
+    print('{} {}'.format(name, age))
+
+    list = input().split()
+    name = list[0]
