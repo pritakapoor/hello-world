@@ -1,7 +1,7 @@
 #Prita Kapoor
 #8010339
 
-from Item import InventoryItem
+from FinalProjectItem import InventoryItem
 from datetime import datetime
 import locale
 
