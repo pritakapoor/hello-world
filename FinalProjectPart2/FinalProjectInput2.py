@@ -2,7 +2,7 @@
 #8010339
 
 import locale
-from FinalProjectInput2 import InventoryItem
+from FinalProjectItem2 import InventoryItem
 from datetime import datetime
 import math
 
